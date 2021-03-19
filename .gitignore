@@ -1,0 +1,8 @@
+#
+*.ipynb
+.vscode
+
+# FILE
+__pycache__/
+ipynb_checkpoints/
+logs/

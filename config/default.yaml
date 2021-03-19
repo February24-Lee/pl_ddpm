@@ -1,0 +1,47 @@
+sample_num: 16
+
+data_module:
+  data_size: 128
+  data_path: 
+  test_batch_size: 128
+  train_batch_size: 128
+  test_ratio: 0.2 
+
+model_params:
+  in_ch: 3
+  base_ch: 128
+  ch_mult: [1, 2, 2, 2]
+  attn_list: [1]
+  n_res_block: 2
+  dropout_rate: 0.1
+  T: 1000
+  tdim: 512
+  n_groupnorm: 32
+
+gaussian_ddpm_params:
+  beta_1:  0.0001
+  beta_T: 0.02
+  T : 1000
+  img_size: 128
+  mean_type: 'epsilon'
+  var_type: 'fixedlarge'
+  optim_lr : 0.0002
+  grad_clip : 1
+  ema_decay : 0.9999
+  warmup: 100
+
+callback_sample:
+  sample_step: 10
+  sample_dir: 'logs/'
+
+callback_savecheckpoint:
+  save_step: 10
+  save_dir: 'logs/'
+
+trainer_params:
+  max_steps: 50000
+  check_val_every_n_steps: 1
+
+test_tube_params:
+  save_dir: 'logs/'
+  name: 'base_ddpm'
