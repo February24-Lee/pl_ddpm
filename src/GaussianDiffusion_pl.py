@@ -127,6 +127,7 @@ class GaussianDiffusion(pl.LightningModule):
     def forward(self, x_T : torch.Tensor, model_type:str = 'model') -> torch.Tensor:
         assert model_type in ['model', 'ema_model']
         x_t = x_T
+        x_t = x_t.to(self.device)
         for time_step in reversed(range(self.T)):
             t = x_t.new_ones([x_T.shape[0], ], dtype=torch.long) * time_step
             mean, log_var = self.p_mean_variance(x_t=x_t, t=t, model_type=model_type)

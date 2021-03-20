@@ -81,3 +81,4 @@ trainer = Trainer(max_epochs=5,
                 callbacks=[callback_sample, callback_save],
                 logger=logger)
 trainer.fit(test_module, test_loader, valid_loader)
+
