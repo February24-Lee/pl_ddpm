@@ -42,6 +42,7 @@ callback_savecheckpoint:
 trainer_params:
   max_steps: 50000
   check_val_every_n_epoch: 1
+  accelerator: 'ddp'
 
 test_tube_params:
   save_dir: 'logs/'

@@ -50,7 +50,7 @@ class SaveCheckpoint(Callback):
                 'ema_model' : pl_module.ema_model.state_dict(),
                 'optim' : pl_module.optimizers().state_dict(),
                 'epoch' : pl_module.current_epoch,
-                'x_T' : self.x_T
+                #'x_T' : self.x_T
             }
             Path(os.path.join(self.save_dir)).mkdir(parents=True, exist_ok=True)
             path = os.path.join(self.save_dir, 'ckpt.pt')

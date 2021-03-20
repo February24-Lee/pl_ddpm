@@ -139,8 +139,7 @@ class GaussianDiffusion(pl.LightningModule):
         return torch.clip(x_0, -1, 1)
                     
     def training_step(self, batch : torch.Tensor, batch_idx : int) -> torch.Tensor:
-        loss = self.share_step(batch, batch_idx)
-        self.logger.log_metrics
+        loss = self.share_step(batch, batch_idx) 
         self.log_dict(loss, on_step=True)
         return loss
     

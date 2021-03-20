@@ -20,7 +20,7 @@ def compose(*funcs):
 
 def extract(v : torch.Tensor, t : torch.Tensor, x_shape : List[int]) -> torch.Tensor:
     out = torch.gather(v, index=t, dim=0).float()
-    return out.view([t.shape[0]] + [1] * (len(x_shape) -1))
+    return out.contiguous().view([t.shape[0]] + [1] * (len(x_shape) -1))
 
 
 def ema(source : nn.Module, target : nn.Module, decay : float) -> None:
