@@ -140,7 +140,8 @@ class GaussianDiffusion(pl.LightningModule):
                     
     def training_step(self, batch : torch.Tensor, batch_idx : int) -> torch.Tensor:
         loss = self.share_step(batch, batch_idx) 
-        self.log_dict(loss, on_step=True)
+        #self.logger.experiment.log(loss, global_step=self.global_step)
+        self.logger.log_metrics({'loss' : loss['loss'].item()}, step=self.global_step)
         return loss
     
     def validation_step(self, batch : torch.Tensor, batch_idx : int ) -> torch.Tensor:
@@ -149,7 +150,8 @@ class GaussianDiffusion(pl.LightningModule):
     
     def validation_epoch_end(self, outputs : List[torch.Tensor]) -> None:
         avg_loss = torch.stack([x['loss'] for x in outputs]).mean()
-        self.log('avg_val_loss', avg_loss, on_epoch=True)
+        self.logger.log_metrics({'avg_val_loss' : avg_loss.item()}, step=self.current_epoch)
+
         
     def share_step(self, batch : torch.Tensor, batch_dix : int ) -> Dict[str, torch.Tensor]:
         t = torch.randint(self.T, size=(batch.shape[0], ), device=batch.device)
