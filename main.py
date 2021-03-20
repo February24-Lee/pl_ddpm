@@ -1,3 +1,5 @@
+import torch
+
 from src.GaussianDiffusion_pl import GaussianDiffusion
 from src.model import UNet
 from src.callbacks import Sampling, SaveCheckpoint
@@ -48,7 +50,7 @@ if __name__ == '__main__':
             x_T=x_T))
     
     #backbone
-    unet = UNet(config['model_params'])
+    unet = UNet(**config['model_params'])
     
     # ddpm model
     gaussian_module = GaussianDiffusion(unet,
