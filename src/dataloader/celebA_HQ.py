@@ -5,6 +5,7 @@ import torchvision.transforms as T
 
 from PIL import Image
 from os import listdir, path
+from types import List
 
 FILE_NAME = {128:'128x128',
              256:'256x256',
@@ -38,38 +39,36 @@ class celebA_HQ_DataModule(LightningDataModule):
         self.test_ratio = test_ratio
         
     def setup(self, stage:str = None):
-        self.dataset = celebA_HQ(data_path=path.join(self.data_path, self.sub_path), data_size=self.data_size)
-        data_num = len(self.dataset)
-        print('number of data : {}'.format(data_num))
-        data_idxs = list(range(data_num))
-        train_idxs, val_idxs = data_idxs[: int(self.test_ratio*data_num)], data_idxs[:int(self.test_ratio*data_num)]
-        self.train_sampler = SubsetRandomSampler(train_idxs)
-        self.val_sampler = SubsetRandomSampler(val_idxs)
-        
+        self.train_dataset = celebA_HQ(data_path=path.join(self.data_path, self.sub_path), data_size=self.data_size, idx_list=[int(self.test_ratio*data_num), None])
+        self.val_dataset = celebA_HQ(data_path=path.join(self.data_path, self.sub_path), data_size=self.data_size, idx_list=[None, int(self.test_ratio*data_num)])
+        print('number of data, train : {}, val : {}'.format(len(self.train_dataset), len(self.val_dataset)))
+    
         
     def train_dataloader(self):
-        return DataLoader(self.dataset, batch_size=self.train_batch_size, 
-                        sampler=self.train_sampler, pin_memory=True)
+        return DataLoader(self.train_dataset, batch_size=self.train_batch_size, pin_memory=True)
         
     def val_dataloader(self):
-        return DataLoader(self.dataset, batch_size=self.test_batch_size,
-                        sampler=self.val_sampler, pin_memory=True)
+        return DataLoader(self.val_dataset, batch_size=self.test_batch_size, pin_memory=True)
         
     
     
 class celebA_HQ(Dataset):
     def __init__(self,
                 data_path : str = None,
-                data_size : int= 128):
+                data_size : int= 128,
+                idx_list : List[int] = None):
         super().__init__()
         self.data_path = data_path
         self.data_list = listdir(data_path)
+        if idx_list is not None:
+            self.data_list = self.data_list[idx_list[0] : idx_list[None]]
         self.data_size = data_size
         self.transforms = T.Compose([T.Resize((self.data_size, self.data_size)),
                                     T.RandomHorizontalFlip(),
                                     T.ToTensor(),
                                     T.Normalize((0.5, 0.5, 0.5),
                                                 (0.5, 0.5, 0.5))])
+        
     
     def __len__(self):
         return len(self.data_list)
