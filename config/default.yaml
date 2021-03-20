@@ -3,9 +3,10 @@ sample_num: 16
 data_module:
   data_size: 128
   data_path: "../../../Share_data/celebA-HQ/"
-  test_batch_size: 128
-  train_batch_size: 128
-  test_ratio: 0.2 
+  test_batch_size: 4
+  train_batch_size: 4
+  test_ratio: 0.2
+  num_workers: 12 
 
 model_params:
   in_ch: 3
